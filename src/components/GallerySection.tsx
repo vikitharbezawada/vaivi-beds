@@ -20,7 +20,7 @@ export function GallerySection() {
       <div className="max-w-screen-2xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4 auto-rows-auto">
         {galleryGridItems.map((item) => (
           <div
-            key={item.src}
+            key={item.key}
             className={`group relative overflow-hidden ${item.span}`}
           >
             <div className={`relative w-full ${item.aspect}`}>

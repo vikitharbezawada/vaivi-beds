@@ -63,7 +63,7 @@ export function HeroSection() {
             href="/configure"
             className="bg-accent text-accent-foreground px-6 sm:px-8 py-3 sm:py-3.5 text-sm font-semibold uppercase tracking-wider text-center inline-flex w-full sm:w-auto min-h-11 items-center justify-center"
           >
-            Get started
+            Build your own
           </Link>
           <Link
             href="#gallery"

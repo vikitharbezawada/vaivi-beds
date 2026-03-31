@@ -41,7 +41,7 @@ export function HeroSlideshow({
     <div className="absolute inset-0 z-0 overflow-hidden" aria-hidden>
       {slides.map((src, i) => (
         <Image
-          key={src}
+          key={`${i}-${src}`}
           src={src}
           alt=""
           fill
