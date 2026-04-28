@@ -32,9 +32,7 @@ export function GallerySection() {
                 sizes="(max-width: 768px) 100vw, 33vw"
                 loading="lazy"
               />
-              <div
-                className="absolute inset-0 bg-gradient-to-t from-foreground/70 via-foreground/0 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-6 md:p-8"
-              >
+              <div className="absolute inset-0 bg-gradient-to-t from-foreground/75 via-foreground/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col items-start justify-end p-6 md:p-8 gap-3">
                 <div className="translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
                   <p className="font-heading text-xl md:text-2xl font-medium text-primary-foreground">
                     Vaivi Beds
@@ -43,6 +41,12 @@ export function GallerySection() {
                     Handcrafted luxury · Hyderabad
                   </p>
                 </div>
+                <Link
+                  href={`/configure?ref=${encodeURIComponent(item.src)}`}
+                  className="translate-y-4 group-hover:translate-y-0 transition-all duration-500 delay-75 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.15em] text-primary-foreground border border-primary-foreground/50 px-4 py-2 hover:bg-primary-foreground hover:text-foreground"
+                >
+                  Customise this style →
+                </Link>
               </div>
             </div>
           </div>

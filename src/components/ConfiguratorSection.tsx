@@ -11,19 +11,19 @@ import { SITE } from "@/lib/site";
 type Config = {
   size: string;
   customSize: string;
+  bedHeight: string;
   headboardStyles: string[];
   headboardWidth: string;
   headboardPanels: string;
   headboardHeight: string;
   headboardHeightCustom: string;
   headboardMaterials: string[];
-  bedHeight: string;
+  headboardColor: string;
+  colourNotes: string;
   baseStyles: string[];
   baseMaterial: string;
   footboard: string;
   storage: string;
-  colourType: string;
-  colourNotes: string;
   notes: string;
   name: string;
   email: string;
@@ -33,19 +33,19 @@ type Config = {
 const DEFAULT: Config = {
   size: "",
   customSize: "",
+  bedHeight: "",
   headboardStyles: [],
   headboardWidth: "",
   headboardPanels: "1 Panel",
   headboardHeight: "Standard",
   headboardHeightCustom: "",
   headboardMaterials: [],
-  bedHeight: "",
+  headboardColor: "",
+  colourNotes: "",
   baseStyles: [],
   baseMaterial: "",
   footboard: "",
   storage: "",
-  colourType: "",
-  colourNotes: "",
   notes: "",
   name: "",
   email: "",
@@ -55,29 +55,24 @@ const DEFAULT: Config = {
 /* ─── Step metadata ──────────────────────────────────── */
 const STEP_META = [
   {
-    label: "Size",
-    question: "What size bed?",
-    instruction: "Pick a standard size, or enter custom dimensions.",
+    label: "Dimensions",
+    question: "What size and height?",
+    instruction: "Pick a standard size and how high off the ground you want it.",
   },
   {
     label: "Headboard",
     question: "Design your headboard.",
-    instruction: "Combine style, panels, height, and material.",
+    instruction: "Style, panels, height, material and colour.",
   },
   {
-    label: "Bed Frame",
-    question: "How should the frame sit?",
-    instruction: "Choose bed height, base style, and base material.",
+    label: "Base",
+    question: "How should the base look?",
+    instruction: "Choose a base style and material.",
   },
   {
     label: "Features",
     question: "Any special features?",
     instruction: "Add footboard detailing and pick a storage option.",
-  },
-  {
-    label: "Colour",
-    question: "What colour scheme?",
-    instruction: "One tone throughout, or a combination — we handle both.",
   },
   {
     label: "Inspiration",
@@ -103,6 +98,11 @@ const SIZE_OPTIONS = [
   { label: "California King", desc: "W6′ × L7′" },
   { label: "Custom", desc: "Enter your size" },
 ];
+const BED_HEIGHTS = [
+  { label: "Standard", desc: "22″" },
+  { label: "Low", desc: "20″" },
+  { label: "High", desc: "24″" },
+];
 const HEADBOARD_STYLES = ["Standard", "Curved", "Slatted", "Extended"];
 const HEADBOARD_PANELS = ["1 Panel", "2 Panels (Double)", "3 Panels (Triple)"];
 const HEADBOARD_HEIGHTS = [
@@ -110,29 +110,23 @@ const HEADBOARD_HEIGHTS = [
   { label: "High", desc: "Custom height" },
 ];
 const HEADBOARD_MATERIALS = ["Leather", "Fabric", "Teak wood", "Rattan"];
-const BED_HEIGHTS = [
-  { label: "Standard", desc: "22″" },
-  { label: "Low", desc: "20″" },
-  { label: "High", desc: "24″" },
+const HEADBOARD_COLOURS = [
+  { label: "Ivory", value: "ivory", hex: "#F0EDE4" },
+  { label: "Sand", value: "sand", hex: "#C4A882" },
+  { label: "Smoke", value: "smoke", hex: "#8D9098" },
+  { label: "Charcoal", value: "charcoal", hex: "#3D3D3D" },
+  { label: "Walnut", value: "walnut", hex: "#7D5538" },
+  { label: "Navy", value: "navy", hex: "#1E3A5F" },
+  { label: "Sage", value: "sage", hex: "#6B8B6B" },
+  { label: "Terracotta", value: "terracotta", hex: "#C66D4D" },
+  { label: "Custom", value: "custom", hex: null },
 ];
 const BASE_STYLES = ["Closed", "Open", "Floating / Boat", "Skirting"];
 const BASE_MATERIALS = ["Leather", "Fabric", "Teak wood"];
 const STORAGE_OPTIONS = [
   { label: "No storage", value: "none", desc: "" },
-  {
-    label: "Hydraulic lift-up",
-    value: "liftup",
-    desc: "Manual handle",
-  },
-  {
-    label: "Hydraulic remote",
-    value: "remote",
-    desc: "One-touch remote",
-  },
-];
-const COLOUR_OPTIONS = [
-  { label: "Single colour", desc: "One tone throughout" },
-  { label: "Multiple colours", desc: "Mix of materials or tones" },
+  { label: "Hydraulic lift-up", value: "liftup", desc: "Manual handle" },
+  { label: "Hydraulic remote", value: "remote", desc: "One-touch remote" },
 ];
 
 /* ─── Helpers ────────────────────────────────────────── */
@@ -140,10 +134,19 @@ const emailOk = (v: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
 const toggle = (arr: string[], v: string) =>
   arr.includes(v) ? arr.filter((x) => x !== v) : [...arr, v];
 
-function previewImage(cfg: Config) {
+function previewImage(cfg: Config, referenceImage?: string): string {
   if (cfg.headboardMaterials.includes("Teak wood")) return images.configOak;
   if (cfg.headboardMaterials.includes("Leather")) return images.configCherry;
-  return images.configDefault;
+  if (cfg.headboardMaterials.includes("Rattan")) return images.configCherry;
+  if (cfg.headboardColor) {
+    if (["walnut", "sand", "terracotta"].includes(cfg.headboardColor))
+      return images.configOak;
+    if (["charcoal", "navy", "sage"].includes(cfg.headboardColor))
+      return images.configCherry;
+    if (["ivory", "smoke"].includes(cfg.headboardColor))
+      return images.configDefault;
+  }
+  return referenceImage ?? images.configDefault;
 }
 
 /* ─── Primitive components ───────────────────────────── */
@@ -260,8 +263,58 @@ function GhostInput({
   );
 }
 
+function ColorSwatch({
+  label,
+  hex,
+  selected,
+  onClick,
+}: {
+  label: string;
+  hex: string | null;
+  selected: boolean;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="flex flex-col items-center gap-1.5"
+    >
+      {hex ? (
+        <div
+          className={`w-9 h-9 rounded-full border-2 transition-all duration-200 ${
+            selected
+              ? "border-foreground scale-110 shadow-sm"
+              : "border-transparent hover:border-foreground/25"
+          }`}
+          style={{ backgroundColor: hex }}
+        />
+      ) : (
+        <div
+          className={`w-9 h-9 rounded-full border-2 transition-all duration-200 overflow-hidden ${
+            selected
+              ? "border-foreground scale-110 shadow-sm"
+              : "border-transparent hover:border-foreground/25"
+          }`}
+          style={{
+            background:
+              "conic-gradient(from 0deg, #F0EDE4, #C4A882, #8D9098, #3D3D3D, #1E3A5F, #6B8B6B, #C66D4D, #F0EDE4)",
+          }}
+        />
+      )}
+      <span
+        className={`text-[10px] font-medium uppercase tracking-wide text-center leading-tight max-w-[54px] ${
+          selected ? "text-foreground" : "text-muted-foreground/60"
+        }`}
+      >
+        {label}
+      </span>
+    </button>
+  );
+}
+
 /* ─── Steps ──────────────────────────────────────────── */
-function StepSize({
+function StepDimensions({
   cfg,
   set,
 }: {
@@ -269,28 +322,46 @@ function StepSize({
   set: (p: Partial<Config>) => void;
 }) {
   return (
-    <div className="space-y-5">
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
-        {SIZE_OPTIONS.map((o) => (
-          <SelectCard
-            key={o.label}
-            label={o.label}
-            desc={o.desc}
-            selected={cfg.size === o.label}
-            onClick={() => set({ size: o.label, customSize: "" })}
-          />
-        ))}
-      </div>
-      {cfg.size === "Custom" && (
-        <div className="pt-1">
-          <GhostInput
-            value={cfg.customSize}
-            onChange={(v) => set({ customSize: v })}
-            placeholder="e.g. 7′ × 7′"
-            className="w-full max-w-xs block"
-          />
+    <div className="space-y-8">
+      <div>
+        <SectionLabel>Bed size</SectionLabel>
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
+          {SIZE_OPTIONS.map((o) => (
+            <SelectCard
+              key={o.label}
+              label={o.label}
+              desc={o.desc}
+              selected={cfg.size === o.label}
+              onClick={() => set({ size: o.label, customSize: "" })}
+            />
+          ))}
         </div>
-      )}
+        {cfg.size === "Custom" && (
+          <div className="pt-3">
+            <GhostInput
+              value={cfg.customSize}
+              onChange={(v) => set({ customSize: v })}
+              placeholder="e.g. 7′ × 7′"
+              className="w-full max-w-xs block"
+            />
+          </div>
+        )}
+      </div>
+
+      <div>
+        <SectionLabel>Bed height</SectionLabel>
+        <div className="flex flex-wrap gap-2">
+          {BED_HEIGHTS.map((h) => (
+            <Chip
+              key={h.label}
+              label={h.label}
+              desc={h.desc}
+              selected={cfg.bedHeight === h.label}
+              onClick={() => set({ bedHeight: h.label })}
+            />
+          ))}
+        </div>
+      </div>
     </div>
   );
 }
@@ -305,7 +376,7 @@ function StepHeadboard({
   return (
     <div className="space-y-8">
       <div>
-        <SectionLabel hint="select all that apply">Style</SectionLabel>
+        <SectionLabel hint="select all that apply">Type</SectionLabel>
         <div className="flex flex-wrap gap-2">
           {HEADBOARD_STYLES.map((s) => (
             <Chip
@@ -326,20 +397,6 @@ function StepHeadboard({
             className="block w-full max-w-xs mt-4"
           />
         )}
-      </div>
-
-      <div>
-        <SectionLabel>Panels</SectionLabel>
-        <div className="flex flex-wrap gap-2">
-          {HEADBOARD_PANELS.map((p) => (
-            <Chip
-              key={p}
-              label={p}
-              selected={cfg.headboardPanels === p}
-              onClick={() => set({ headboardPanels: p })}
-            />
-          ))}
-        </div>
       </div>
 
       <div>
@@ -382,11 +439,50 @@ function StepHeadboard({
           ))}
         </div>
       </div>
+
+      <div>
+        <SectionLabel>Colour</SectionLabel>
+        <div className="flex flex-wrap gap-5">
+          {HEADBOARD_COLOURS.map((c) => (
+            <ColorSwatch
+              key={c.value}
+              label={c.label}
+              hex={c.hex}
+              selected={cfg.headboardColor === c.value}
+              onClick={() =>
+                set({ headboardColor: cfg.headboardColor === c.value ? "" : c.value })
+              }
+            />
+          ))}
+        </div>
+        {cfg.headboardColor === "custom" && (
+          <GhostInput
+            value={cfg.colourNotes}
+            onChange={(v) => set({ colourNotes: v })}
+            placeholder="Describe your colour, e.g. dusty rose, forest green, off-white…"
+            className="block w-full mt-5"
+          />
+        )}
+      </div>
+
+      <div>
+        <SectionLabel>Panels</SectionLabel>
+        <div className="flex flex-wrap gap-2">
+          {HEADBOARD_PANELS.map((p) => (
+            <Chip
+              key={p}
+              label={p}
+              selected={cfg.headboardPanels === p}
+              onClick={() => set({ headboardPanels: p })}
+            />
+          ))}
+        </div>
+      </div>
     </div>
   );
 }
 
-function StepFrame({
+function StepBase({
   cfg,
   set,
 }: {
@@ -395,21 +491,6 @@ function StepFrame({
 }) {
   return (
     <div className="space-y-8">
-      <div>
-        <SectionLabel>Bed height</SectionLabel>
-        <div className="flex flex-wrap gap-2">
-          {BED_HEIGHTS.map((h) => (
-            <Chip
-              key={h.label}
-              label={h.label}
-              desc={h.desc}
-              selected={cfg.bedHeight === h.label}
-              onClick={() => set({ bedHeight: h.label })}
-            />
-          ))}
-        </div>
-      </div>
-
       <div>
         <SectionLabel hint="select all that apply">Base style</SectionLabel>
         <div className="flex flex-wrap gap-2">
@@ -482,39 +563,6 @@ function StepFeatures({
           ))}
         </div>
       </div>
-    </div>
-  );
-}
-
-function StepColour({
-  cfg,
-  set,
-}: {
-  cfg: Config;
-  set: (p: Partial<Config>) => void;
-}) {
-  return (
-    <div className="space-y-5">
-      <div className="flex gap-2.5">
-        {COLOUR_OPTIONS.map((o) => (
-          <SelectCard
-            key={o.label}
-            label={o.label}
-            desc={o.desc}
-            selected={cfg.colourType === o.label}
-            onClick={() => set({ colourType: o.label, colourNotes: "" })}
-            wide
-          />
-        ))}
-      </div>
-      {cfg.colourType === "Multiple colours" && (
-        <GhostInput
-          value={cfg.colourNotes}
-          onChange={(v) => set({ colourNotes: v })}
-          placeholder="Describe your colour combination or preferences"
-          className="block w-full"
-        />
-      )}
     </div>
   );
 }
@@ -707,17 +755,27 @@ function ProgressBar({ current }: { current: number }) {
 
 /* ─── Live summary (left panel) ──────────────────────── */
 function LiveSummary({ cfg }: { cfg: Config }) {
+  const colourLabel = HEADBOARD_COLOURS.find(
+    (c) => c.value === cfg.headboardColor
+  );
   const rows: [string, string][] = [];
   if (cfg.size)
     rows.push([
       "Size",
       cfg.size === "Custom" && cfg.customSize ? cfg.customSize : cfg.size,
     ]);
+  if (cfg.bedHeight) rows.push(["Bed height", cfg.bedHeight]);
   if (cfg.headboardStyles.length)
     rows.push(["Headboard", cfg.headboardStyles.join(", ")]);
   if (cfg.headboardMaterials.length)
     rows.push(["Material", cfg.headboardMaterials.join(", ")]);
-  if (cfg.bedHeight) rows.push(["Bed height", cfg.bedHeight]);
+  if (cfg.headboardColor)
+    rows.push([
+      "Colour",
+      cfg.headboardColor === "custom" && cfg.colourNotes
+        ? cfg.colourNotes
+        : colourLabel?.label ?? cfg.headboardColor,
+    ]);
   if (cfg.baseStyles.length) rows.push(["Base", cfg.baseStyles.join(", ")]);
   if (cfg.baseMaterial) rows.push(["Base material", cfg.baseMaterial]);
   if (cfg.storage)
@@ -729,7 +787,6 @@ function LiveSummary({ cfg }: { cfg: Config }) {
           ? "Hydraulic lift-up"
           : "Hydraulic remote",
     ]);
-  if (cfg.colourType) rows.push(["Colour", cfg.colourType]);
   if (!rows.length) return null;
   return (
     <div className="mt-7 pt-6 border-t border-border/30">
@@ -761,11 +818,20 @@ function SuccessScreen({
   cfg: Config;
   onReset: () => void;
 }) {
+  const colourLabel = HEADBOARD_COLOURS.find(
+    (c) => c.value === cfg.headboardColor
+  );
+  const colourDisplay =
+    cfg.headboardColor === "custom" && cfg.colourNotes
+      ? cfg.colourNotes
+      : colourLabel?.label;
+
   const summaryRows: [string, string][] = [
     ["Size", cfg.size === "Custom" ? cfg.customSize || "Custom" : cfg.size || "—"],
+    ["Bed height", cfg.bedHeight || "—"],
     ["Headboard", cfg.headboardStyles.join(", ") || "—"],
     ["Material", cfg.headboardMaterials.join(", ") || "—"],
-    ["Bed height", cfg.bedHeight || "—"],
+    ["Colour", colourDisplay || "—"],
     ["Base style", cfg.baseStyles.join(", ") || "—"],
     ["Base material", cfg.baseMaterial || "—"],
     ["Footboard", cfg.footboard === "yes" ? "Yes" : cfg.footboard === "no" ? "No" : "—"],
@@ -779,7 +845,6 @@ function SuccessScreen({
             ? "Hydraulic remote"
             : "—",
     ],
-    ["Colour", cfg.colourType || "—"],
   ].filter(([, v]) => v && v !== "—") as [string, string][];
 
   return (
@@ -928,7 +993,11 @@ function SuccessScreen({
 }
 
 /* ─── Main export ────────────────────────────────────── */
-export function ConfiguratorSection() {
+export function ConfiguratorSection({
+  referenceImage,
+}: {
+  referenceImage?: string;
+}) {
   const [step, setStep] = useState(0);
   const [cfg, setCfg] = useState<Config>(DEFAULT);
   const [inspoPhotos, setInspoPhotos] = useState<
@@ -941,7 +1010,7 @@ export function ConfiguratorSection() {
   const [submitted, setSubmitted] = useState(false);
 
   const set = (patch: Partial<Config>) => setCfg((c) => ({ ...c, ...patch }));
-  const currentImage = previewImage(cfg);
+  const currentImage = previewImage(cfg, referenceImage);
 
   /* file helpers */
   function makeHandler(
@@ -1029,17 +1098,24 @@ export function ConfiguratorSection() {
         <div className="hidden lg:block lg:sticky lg:top-32 lg:self-start">
           <div className="relative aspect-[4/5] w-full overflow-hidden rounded-sm">
             <Image
+              key={currentImage}
               src={currentImage}
               alt=""
               fill
-              className="object-cover transition-opacity duration-700"
+              className="object-cover animate-fade-in"
               sizes="(max-width: 1024px) 0px, 40vw"
               priority
             />
           </div>
-          <p className="text-[11px] text-muted-foreground/40 mt-3.5 tracking-wide">
-            Preview updates as you configure
-          </p>
+          {referenceImage && currentImage === referenceImage ? (
+            <p className="text-[11px] text-muted-foreground/40 mt-3.5 tracking-wide">
+              Customising from gallery inspiration · select options to update
+            </p>
+          ) : (
+            <p className="text-[11px] text-muted-foreground/40 mt-3.5 tracking-wide">
+              Preview updates as you configure
+            </p>
+          )}
           <LiveSummary cfg={cfg} />
         </div>
 
@@ -1060,12 +1136,11 @@ export function ConfiguratorSection() {
             </div>
 
             {/* Step body */}
-            {step === 0 && <StepSize cfg={cfg} set={set} />}
+            {step === 0 && <StepDimensions cfg={cfg} set={set} />}
             {step === 1 && <StepHeadboard cfg={cfg} set={set} />}
-            {step === 2 && <StepFrame cfg={cfg} set={set} />}
+            {step === 2 && <StepBase cfg={cfg} set={set} />}
             {step === 3 && <StepFeatures cfg={cfg} set={set} />}
-            {step === 4 && <StepColour cfg={cfg} set={set} />}
-            {step === 5 && (
+            {step === 4 && (
               <StepInspiration
                 cfg={cfg}
                 set={set}
@@ -1077,7 +1152,7 @@ export function ConfiguratorSection() {
                 removeRoom={(i) => removePhoto(setRoomPhotos, i)}
               />
             )}
-            {step === 6 && <StepDetails cfg={cfg} set={set} />}
+            {step === 5 && <StepDetails cfg={cfg} set={set} />}
           </div>
 
           {/* Navigation */}
@@ -1118,10 +1193,11 @@ export function ConfiguratorSection() {
           <div className="lg:hidden mt-10">
             <div className="relative aspect-video w-full overflow-hidden rounded-sm">
               <Image
+                key={currentImage}
                 src={currentImage}
                 alt=""
                 fill
-                className="object-cover"
+                className="object-cover animate-fade-in"
                 sizes="100vw"
               />
             </div>
