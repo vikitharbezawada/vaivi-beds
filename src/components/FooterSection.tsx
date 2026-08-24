@@ -13,13 +13,12 @@ export function FooterSection() {
           <div>
             <p className="font-heading text-xl font-medium mb-4">{SITE.name}</p>
             <p className="text-muted-foreground text-sm leading-relaxed max-w-md">
-              Luxury premium beds that are completely customisable. Complete
-              your bedroom look with Vaivi Beds.
+              Custom beds, made in Hyderabad for rooms across India.
             </p>
           </div>
           <div>
-            <h3 className="text-xs font-semibold uppercase tracking-wider text-foreground mb-4">
-              Contacts
+            <h3 className="text-sm font-medium text-foreground mb-4">
+              Visit or Call
             </h3>
             <ul className="space-y-4 text-sm text-muted-foreground">
               <li className="leading-relaxed">{SITE.experienceCenter}</li>
@@ -40,24 +39,18 @@ export function FooterSection() {
                 </a>
               </li>
             </ul>
-            <div className="flex flex-wrap gap-x-6 gap-y-3 mt-6">
+            <div className="mt-6">
               <Link
                 href="/contact"
-                className="text-xs font-semibold uppercase tracking-wider text-accent hover:opacity-80 transition-opacity"
+                className="text-sm font-medium text-accent hover:opacity-80 transition-opacity"
               >
-                Contact us →
-              </Link>
-              <Link
-                href="/configure"
-                className="text-xs font-semibold uppercase tracking-wider text-muted-foreground hover:text-foreground transition-colors"
-              >
-                Get started →
+                Contact Us →
               </Link>
             </div>
           </div>
         </div>
         <p className="text-sm text-muted-foreground mt-12 pt-8 border-t border-border text-center md:text-left">
-          Copyright © {year} Vaivibeds
+          © {year} Vaivi Beds
         </p>
       </div>
     </footer>

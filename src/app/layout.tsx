@@ -17,9 +17,9 @@ const dmSans = DM_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Handcrafted luxury beds in India – Vaivi Beds",
+  title: "Custom Beds Made in India | Vaivi Beds",
   description:
-    "Creating your sleep sanctuary. 200+ custom bed designs, premium solid wood, delivered in 2–3 weeks. Experience center in Banjara Hills, Hyderabad.",
+    "Choose from more than 200 bed designs or bring your own. Custom made in Hyderabad and installed at home.",
 };
 
 export default function RootLayout({

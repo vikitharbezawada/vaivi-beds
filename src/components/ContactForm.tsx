@@ -6,7 +6,7 @@ import { toast } from "sonner";
 const inputClass =
   "w-full bg-transparent border-b border-border/50 py-3 text-base placeholder:text-muted-foreground/40 focus:outline-none focus:border-foreground/40 transition-colors duration-300";
 
-const labelClass = "block text-[11px] font-semibold uppercase tracking-[0.15em] text-muted-foreground";
+const labelClass = "block text-sm font-medium text-muted-foreground";
 
 export function ContactForm() {
   const [firstName, setFirstName] = useState("");
@@ -37,7 +37,7 @@ export function ContactForm() {
     setSubmitting(true);
     window.setTimeout(() => {
       setSubmitting(false);
-      toast.success("Thanks — we’ll be in touch soon.");
+      toast.success("Thanks. We’ll be in touch soon.");
       setFirstName("");
       setLastName("");
       setPhone("");
@@ -49,9 +49,9 @@ export function ContactForm() {
   return (
     <form onSubmit={submit} className="relative space-y-10">
       <div className="mb-8">
-        <p className="font-heading text-xl font-medium">Send a message</p>
+        <p className="font-heading text-xl font-medium">Send a Message</p>
         <p className="text-muted-foreground text-sm mt-1">
-          We&apos;ll get back to you shortly
+          Tell us what you have in mind. We&apos;ll reply within two working days.
         </p>
       </div>
 
@@ -136,11 +136,11 @@ export function ContactForm() {
           onChange={(e) => setMessage(e.target.value)}
           className={`${inputClass} resize-y min-h-[120px]`}
           maxLength={4000}
-          placeholder="Tell us what you’re looking for…"
+          placeholder="Tell us about the bed or room you have in mind"
         />
       </div>
 
-      {/* Honeypot — leave blank (matches common “If you are human…” pattern) */}
+      {/* Honeypot field. */}
       <div
         className="absolute -left-[9999px] h-0 w-0 overflow-hidden opacity-0"
         aria-hidden
@@ -160,9 +160,9 @@ export function ContactForm() {
       <button
         type="submit"
         disabled={submitting}
-        className="w-full bg-foreground text-background py-4 text-xs font-medium uppercase tracking-[0.25em] hover:opacity-80 transition-all duration-300 disabled:opacity-40 rounded-sm"
+        className="w-full bg-foreground text-background py-4 text-sm font-medium hover:opacity-80 transition-all duration-300 disabled:opacity-40 rounded-sm"
       >
-        {submitting ? "Submitting…" : "Submit"}
+        {submitting ? "Sending…" : "Send Message"}
       </button>
     </form>
   );

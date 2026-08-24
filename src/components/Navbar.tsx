@@ -31,8 +31,8 @@ function NavbarInner({ variant, pathname }: NavbarProps & { pathname: string }) 
 
   const desktopLink =
     resolved === "transparent" && !menuOpen
-      ? "text-primary-foreground/80 hover:text-primary-foreground transition-opacity tracking-wide"
-      : "text-foreground/80 hover:text-foreground transition-colors tracking-wide";
+      ? "text-primary-foreground/80 hover:text-primary-foreground transition-opacity"
+      : "text-foreground/75 hover:text-foreground transition-colors";
 
   const desktopCtaBorder =
     resolved === "transparent" && !menuOpen
@@ -86,21 +86,18 @@ function NavbarInner({ variant, pathname }: NavbarProps & { pathname: string }) 
             Vaivi Beds
           </Link>
 
-          <div className="hidden md:flex items-center gap-6 lg:gap-8 text-sm">
+          <div className="hidden md:flex items-center gap-7 lg:gap-9 text-sm">
             <Link href={galleryHref} className={desktopLink}>
               Gallery
             </Link>
             <Link href={contactHref} className={desktopLink}>
-              Contact us
-            </Link>
-            <Link href="/configure" className={desktopLink}>
-              Configure
+              Contact Us
             </Link>
             <Link
               href="/configure"
-              className={`border px-5 py-2 uppercase text-xs font-semibold tracking-wider ${desktopCtaBorder} ${desktopLink}`}
+              className={`border px-5 py-2.5 text-sm font-medium ${desktopCtaBorder} ${desktopLink}`}
             >
-              Get a quote
+              Design Your Bed
             </Link>
           </div>
 
@@ -146,21 +143,14 @@ function NavbarInner({ variant, pathname }: NavbarProps & { pathname: string }) 
             className="py-3.5 text-base font-medium border-b border-border/80 min-h-11 flex items-center"
             onClick={closeMenu}
           >
-            Contact us
+            Contact Us
           </Link>
           <Link
             href="/configure"
-            className="py-3.5 text-base font-medium border-b border-border/80 min-h-11 flex items-center"
+            className="mt-4 bg-foreground text-background px-5 py-3 text-center text-sm font-medium min-h-11 inline-flex items-center justify-center"
             onClick={closeMenu}
           >
-            Configure
-          </Link>
-          <Link
-            href="/configure"
-            className="mt-4 border border-foreground/30 px-5 py-3 text-center text-xs font-semibold uppercase tracking-wider min-h-11 inline-flex items-center justify-center"
-            onClick={closeMenu}
-          >
-            Get a quote
+            Design Your Bed
           </Link>
         </div>
       </div>

@@ -1,7 +1,19 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
+
+const motionQuery = "(prefers-reduced-motion: reduce)";
+
+function subscribeToMotionPreference(onChange: () => void) {
+  const media = window.matchMedia(motionQuery);
+  media.addEventListener("change", onChange);
+  return () => media.removeEventListener("change", onChange);
+}
+
+function getMotionPreference() {
+  return window.matchMedia(motionQuery).matches;
+}
 
 type HeroSlideshowProps = {
   slides: string[];
@@ -17,15 +29,11 @@ export function HeroSlideshow({
   fadeMs = 1400,
 }: HeroSlideshowProps) {
   const [index, setIndex] = useState(0);
-  const [reduceMotion, setReduceMotion] = useState(false);
-
-  useEffect(() => {
-    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    setReduceMotion(mq.matches);
-    const onChange = () => setReduceMotion(mq.matches);
-    mq.addEventListener("change", onChange);
-    return () => mq.removeEventListener("change", onChange);
-  }, []);
+  const reduceMotion = useSyncExternalStore(
+    subscribeToMotionPreference,
+    getMotionPreference,
+    () => false,
+  );
 
   useEffect(() => {
     if (reduceMotion || slides.length <= 1) return;

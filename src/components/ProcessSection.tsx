@@ -1,48 +1,34 @@
 import {
   BedDouble,
-  FileText,
   Hammer,
   Palette,
-  Sparkles,
   Truck,
 } from "lucide-react";
 
 const steps = [
   {
     icon: BedDouble,
-    title: "Design Selection",
+    title: "Choose a Design",
     description:
-      "Choose a design from our catalogue or share your own inspiration.",
+      "Pick from our catalogue, or show us a bed you already love.",
   },
   {
     icon: Palette,
-    title: "Material and Colour Preferences",
+    title: "Make It Yours",
     description:
-      "Select your preferred materials, finishes, and colours to match your space.",
-  },
-  {
-    icon: FileText,
-    title: "Detailed Presentation",
-    description:
-      "Receive detailed technical drawings, 3D renders, and specifications of your custom bed.",
+      "Choose the size, base, headboard, material and colour.",
   },
   {
     icon: Hammer,
-    title: "Excellence & Craftsmanship",
+    title: "See It in Your Room",
     description:
-      "Our artisans begin building your custom bed with precision and care.",
+      "Share a room photo and review the design before we begin making it.",
   },
   {
     icon: Truck,
-    title: "Delivery & Installation",
+    title: "We Build and Install",
     description:
-      "Your bespoke Vaivi Bed is delivered and installed right in your home.",
-  },
-  {
-    icon: Sparkles,
-    title: "Signature Comfort",
-    description:
-      "Relax and enjoy a luxury sleep experience, crafted specially for you!",
+      "Your bed is made, delivered and installed by our team.",
   },
 ] as const;
 
@@ -50,15 +36,15 @@ export function ProcessSection() {
   return (
     <section className="section-padding bg-primary text-primary-foreground overflow-hidden">
       <div className="mb-12 sm:mb-16 md:mb-20 text-center max-w-2xl mx-auto px-1">
-        <p className="font-body text-xs font-semibold uppercase tracking-[0.3em] text-accent mb-4">
-          Our Process
+        <p className="font-body text-sm font-medium text-accent mb-4">
+          How It Works
         </p>
         <h2 className="heading-section mb-6">
-          Ensuring design detailing at every stage
+          From an Idea to Your Bedroom
         </h2>
         <div className="w-16 h-px bg-accent mx-auto" />
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px bg-primary-foreground/[0.12] max-w-6xl mx-auto rounded-sm overflow-hidden">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-px bg-primary-foreground/[0.12] max-w-6xl mx-auto overflow-hidden">
         {steps.map((step, index) => (
           <div
             key={step.title}
@@ -81,13 +67,6 @@ export function ProcessSection() {
             </p>
           </div>
         ))}
-      </div>
-      <div className="mt-12 sm:mt-16 md:mt-20 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 px-4 text-center">
-        <div className="hidden sm:block h-px w-12 bg-accent/40 shrink-0" />
-        <p className="text-accent/60 text-[10px] sm:text-xs tracking-[0.25em] sm:tracking-[0.3em] uppercase font-medium max-w-[16rem] sm:max-w-none leading-relaxed">
-          From concept to comfort
-        </p>
-        <div className="hidden sm:block h-px w-12 bg-accent/40 shrink-0" />
       </div>
     </section>
   );

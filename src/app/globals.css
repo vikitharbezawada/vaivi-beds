@@ -1,9 +1,9 @@
 @import "tailwindcss";
 
 :root {
-  --background: 40 20% 97%;
-  --foreground: 30 5% 10%;
-  --card: 40 15% 94%;
+  --background: 42 30% 97%;
+  --foreground: 30 8% 11%;
+  --card: 40 22% 94%;
   --card-foreground: 30 5% 10%;
   --popover: 40 20% 97%;
   --popover-foreground: 30 5% 10%;
@@ -13,12 +13,12 @@
   --secondary-foreground: 30 5% 12%;
   --muted: 40 8% 93%;
   --muted-foreground: 30 4% 50%;
-  --accent: 38 35% 52%;
+  --accent: 34 38% 43%;
   --accent-foreground: 40 20% 97%;
   --destructive: 0 60% 50%;
   --destructive-foreground: 0 0% 98%;
-  --border: 40 8% 88%;
-  --input: 40 8% 88%;
+  --border: 38 14% 87%;
+  --input: 38 14% 87%;
   --ring: 38 35% 52%;
   --radius: 0.125rem;
 }
@@ -86,7 +86,7 @@
   }
 
   .label-uppercase {
-    @apply text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground;
+    @apply text-sm font-medium tracking-normal text-muted-foreground;
     font-family: var(--font-body), ui-sans-serif, system-ui, sans-serif;
   }
 }
